@@ -1,110 +1,3 @@
-//import SwiftUI
-//import Combine
-//
-//class WebSocketViewModel: ObservableObject {
-//    @Published var serverAddress = "ws://10.16.50.133:8765" // Default address
-//    @Published var logMessages: [String] = []
-//    @Published var isConnected = false
-//
-//    var imageClient: WebSocketImageClient?
-//    var imgEncoder: ImgEncoder?
-//
-//    init() {
-//        do {
-//            let baseURL = URL(fileURLWithPath: Bundle.main.resourcePath!)
-////            appendLog("ImgEncoder initialized with baseURL: \(baseURL)")
-//            self.imgEncoder = try ImgEncoder(resourcesAt: baseURL)
-//        } catch {
-//            appendLog("Initialization of ImgEncoder failed")
-//            self.imgEncoder = nil
-//        }
-//    }
-//
-//    func connect() {
-//        guard let url = URL(string: serverAddress), let encoder = imgEncoder else {
-//            appendLog("Invalid URL or encoder not initialized")
-//            return
-//        }
-//        
-//        imageClient = WebSocketImageClient(serverURL: url, encoder: encoder)
-//        imageClient?.onConnectionStatusChanged = { [weak self] isConnected in
-//            DispatchQueue.main.async {
-//                self?.isConnected = isConnected
-//            }
-//        }
-//        imageClient?.connect()
-//        appendLog("Attempting to connect to \(serverAddress)")
-//    }
-//
-//    func disconnect() {
-//        imageClient?.disconnect()
-//        appendLog("Disconnected")
-//    }
-//
-//    private func appendLog(_ message: String) {
-//        DispatchQueue.main.async {
-//            self.logMessages.append(message)
-//        }
-//    }
-//}
-//
-//
-//struct WebSocketView: View {
-//    @StateObject var viewModel = WebSocketViewModel() // Initialize your encoder appropriately
-//
-//    var body: some View {
-//        VStack {
-//            TextField("Server Address", text: $viewModel.serverAddress)
-//                .textFieldStyle(RoundedBorderTextFieldStyle())
-//                .padding()
-//
-//            Button(action: {
-//                if viewModel.isConnected {
-//                    viewModel.disconnect()
-//                } else {
-//                    viewModel.connect()
-//                }
-//            }) {
-//                Text(viewModel.isConnected ? "Disconnect" : "Connect")
-//                    .foregroundColor(.white)
-//                    .padding()
-//                    .background(viewModel.isConnected ? Color.red : Color.blue)
-//                    .cornerRadius(10)
-//            }
-//
-//            ScrollView {
-//                ScrollViewReader { value in
-//                    VStack(alignment: .leading) {
-//                        ForEach(viewModel.logMessages, id: \.self) { msg in
-//                            Text(msg)
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//                                .padding(3)
-//                        }
-//                        Rectangle() // Invisible marker
-//                            .frame(width: 0, height: 0)
-//                            .id("bottom")
-//                    }
-//                    .onAppear {
-//                        value.scrollTo("bottom", anchor: .bottom)
-//                    }
-//                    .onChange(of: viewModel.logMessages) { oldValue, newValue in
-//                        // Compare old and new values if needed
-//                        if oldValue != newValue {
-//                            value.scrollTo("bottom", anchor: .bottom)
-//                        }
-//                    }
-//                    .frame(width: 350)
-//                }
-//            }
-//            .frame(width: 350, height: 400)
-//            .border(Color.gray, width: 1)
-//            .cornerRadius(10) // Add rounded corners to ScrollView
-//            .padding()
-//        }
-//        .padding()
-//    }
-//}
-//
 import SwiftUI
 import Combine
 import Foundation
@@ -115,6 +8,7 @@ class WebSocketViewModel: ObservableObject {
     @Published var isConnected = false
     @Published var averageSpeed = "N/A"
     @Published var clientKey = "12345"
+    @Published var showAlert = false
     
 
     var imageClient: WebSocketImageClient?
@@ -131,7 +25,31 @@ class WebSocketViewModel: ObservableObject {
             appendLog("Initialization of ImgEncoder failed")
             self.imgEncoder = nil
         }
+        loadSettings()
     }
+    
+    func saveSettings(newServerAddress: String, newClientKey: String) {
+        if URL.isValidURL(newServerAddress) {
+            DispatchQueue.main.async {
+                self.serverAddress = newServerAddress
+                self.clientKey = newClientKey
+                UserDefaults.standard.set(newServerAddress, forKey: "ServerAddress")
+                UserDefaults.standard.set(newClientKey, forKey: "ClientKey")
+                UserDefaults.standard.synchronize()
+                self.showAlert = false
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.showAlert = true
+            }
+        }
+    }
+
+    func loadSettings() {
+        serverAddress = UserDefaults.standard.string(forKey: "ServerAddress") ?? "ws://10.16.50.133:8765"
+        clientKey = UserDefaults.standard.string(forKey: "ClientKey") ?? "12345"
+    }
+
     
     private func setupClient() {
         guard let encoder = imgEncoder else { return }
@@ -180,19 +98,38 @@ class WebSocketViewModel: ObservableObject {
     }
 }
 
-
 struct WebSocketView: View {
-    @EnvironmentObject var viewModel: WebSocketViewModel  // Use the environment object
+    @EnvironmentObject var viewModel: WebSocketViewModel
 
     var body: some View {
         VStack {
-            TextField("Server Address", text: $viewModel.serverAddress)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            TextField("Key", text: $viewModel.clientKey)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
+            HStack {
+                // Server Address occupying two-thirds of the screen
+                VStack(alignment: .leading) {
+                    Text("Server Address:")
+                    Text(viewModel.serverAddress)
+                        .font(.system(size: 18))
+                        .foregroundColor(.secondary)
+                        .padding(.top, 2) // Slight padding for alignment
+                }
+                .padding(.horizontal)
+                .frame(width: UIScreen.main.bounds.width * 2 / 3, alignment: .leading)
+
+                Spacer() // Separates address and key
+
+                // Key occupying one-third of the screen
+                VStack(alignment: .leading) {
+                    Text("Key:")
+                    Text(viewModel.clientKey)
+                        .font(.system(size: 18))
+                        .foregroundColor(.secondary)
+                        .padding(.top, 2)
+                }
+                .padding(.horizontal)
+                .frame(width: UIScreen.main.bounds.width / 3, alignment: .leading)
+            }
+            .padding(.top)
+
             Button(action: {
                 if viewModel.isConnected {
                     viewModel.disconnect()
@@ -206,6 +143,7 @@ struct WebSocketView: View {
                     .background(viewModel.isConnected ? Color.red : Color.blue)
                     .cornerRadius(10)
             }
+            .padding()
 
             Text("Average Processing Speed: \(viewModel.averageSpeed)")
                 .padding()
@@ -218,26 +156,15 @@ struct WebSocketView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(3)
                         }
-                        Rectangle() // Invisible marker
-                            .frame(width: 0, height: 0)
-                            .id("bottom")
-                    }
-                    .onAppear {
-                        value.scrollTo("bottom", anchor: .bottom)
-                    }
-                    .onChange(of: viewModel.logMessages) { oldValue, newValue in
-                        if oldValue != newValue {
-                            value.scrollTo("bottom", anchor: .bottom)
-                        }
                     }
                     .frame(width: 350)
                 }
             }
             .frame(width: 350, height: 370)
             .border(Color.gray, width: 1)
-            .cornerRadius(10) 
+            .cornerRadius(10)
             .padding()
         }
-        .padding()
     }
 }
+

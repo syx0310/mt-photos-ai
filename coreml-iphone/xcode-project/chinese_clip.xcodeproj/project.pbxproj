@@ -11,6 +11,8 @@
 		462CCCDE2BFF040800353F13 /* websocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462CCCDD2BFF040800353F13 /* websocket.swift */; };
 		462CCCE12BFF0AEF00353F13 /* wsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462CCCE02BFF0AEF00353F13 /* wsView.swift */; };
 		462CCCE52C00708800353F13 /* ocr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462CCCE42C00708800353F13 /* ocr.swift */; };
+		462D73642C0843FF00790AF9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462D73632C0843FF00790AF9 /* SettingsView.swift */; };
+		462D73662C084D4D00790AF9 /* Url-Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462D73652C084D4D00790AF9 /* Url-Utils.swift */; };
 		4664CBFE2BFD872C00BBD544 /* chinese_clipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4664CBFD2BFD872C00BBD544 /* chinese_clipApp.swift */; };
 		4664CC002BFD872C00BBD544 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4664CBFF2BFD872C00BBD544 /* ContentView.swift */; };
 		4664CC022BFD872D00BBD544 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4664CC012BFD872D00BBD544 /* Assets.xcassets */; };
@@ -47,6 +49,8 @@
 		462CCCE02BFF0AEF00353F13 /* wsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = wsView.swift; sourceTree = "<group>"; };
 		462CCCE22C001E3200353F13 /* chinese-clip-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "chinese-clip-Info.plist"; sourceTree = SOURCE_ROOT; };
 		462CCCE42C00708800353F13 /* ocr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ocr.swift; sourceTree = "<group>"; };
+		462D73632C0843FF00790AF9 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		462D73652C084D4D00790AF9 /* Url-Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Url-Utils.swift"; sourceTree = "<group>"; };
 		4664CBFA2BFD872C00BBD544 /* chinese_clip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chinese_clip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4664CBFD2BFD872C00BBD544 /* chinese_clipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = chinese_clipApp.swift; sourceTree = "<group>"; };
 		4664CBFF2BFD872C00BBD544 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -95,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				4664CBFF2BFD872C00BBD544 /* ContentView.swift */,
+				462D73632C0843FF00790AF9 /* SettingsView.swift */,
 				462CCCE02BFF0AEF00353F13 /* wsView.swift */,
 			);
 			path = Views;
@@ -193,6 +198,7 @@
 			children = (
 				46DEF44F2BFEDC7E00C19C1F /* UIImage-Utils.swift */,
 				462CCCDD2BFF040800353F13 /* websocket.swift */,
+				462D73652C084D4D00790AF9 /* Url-Utils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -339,7 +345,9 @@
 				46A89CD92BFD8A6E00D7ED04 /* TextEncoder.swift in Sources */,
 				4664CBFE2BFD872C00BBD544 /* chinese_clipApp.swift in Sources */,
 				462CCCE12BFF0AEF00353F13 /* wsView.swift in Sources */,
+				462D73642C0843FF00790AF9 /* SettingsView.swift in Sources */,
 				46DEF4502BFEDC7E00C19C1F /* UIImage-Utils.swift in Sources */,
+				462D73662C084D4D00790AF9 /* Url-Utils.swift in Sources */,
 				46A89CDC2BFD8AD900D7ED04 /* BertTokenizer.swift in Sources */,
 				462CCCE52C00708800353F13 /* ocr.swift in Sources */,
 				46A89CD72BFD8A6700D7ED04 /* ImgEncoder.swift in Sources */,

@@ -12,6 +12,7 @@ __note__: Please ues torch 2.2.0, 2.3.0 will lead to an error when loading the m
 
 | Part       | Description                    | Data Type | Length                  |
 |------------|--------------------------------|-----------|-------------------------|
+| Options    | Reserved for future options    | bytearray | 32 bytes (fixed length) |
 | Message ID | MD5 hash of the image data     | String    | 32 bytes (fixed length) |
 | Image Data | Binary data of the image       | Byte Data | Variable length         |
 

@@ -76,9 +76,15 @@ class WebSocketImageClient: WebSocketDelegate {
     }
 
     private func handleReceivedData(_ data: Data) {
+        let optionSize = 32
         let idSize = 32  // MD5 hash is 32 characters when represented as a string
-        let idData = data.prefix(idSize)
-        let imageData = data.suffix(from: idSize)
+        let optionData = data.prefix(optionSize)
+        let idDataStartIndex = data.index(data.startIndex, offsetBy: optionSize)
+        let idDataEndIndex = data.index(idDataStartIndex, offsetBy: idSize)
+        let idData = data[idDataStartIndex..<idDataEndIndex]
+
+        let imageDataStartIndex = data.index(idDataEndIndex, offsetBy: 0)
+        let imageData = data.suffix(from: imageDataStartIndex)
         
         guard let messageId = String(data: idData, encoding: .utf8) else {
             print("Error: Unable to decode message ID")
@@ -116,31 +122,6 @@ class WebSocketImageClient: WebSocketDelegate {
             }
         }
     }
-
-//    private func sendEmbedding(_ embedding: MLMultiArray, withId messageId: String) {
-//        var embeddingArray = [Float]()
-//        for i in 0..<embedding.count {
-//            embeddingArray.append(embedding[i].floatValue)
-//        }
-//        
-//        let json: [String: Any] = [
-//            "id": messageId,
-//            "embedding": embeddingArray
-//        ]
-//        
-//        do {
-//            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
-//            if let jsonString = String(data: jsonData, encoding: .utf8) {
-//                socket?.write(string: jsonString) {
-//                    print("Embedding data sent successfully as JSON.")
-//                    self.processedMessageIds.remove(messageId)
-//                }
-//            }
-//        } catch {
-//            print("Error serializing JSON: \(error)")
-//        }
-//    }
-    
     
     private func sendEmbedding(_ embedding: MLMultiArray,_ ocr_result: [String: Any] ,withId messageId: String) {
         var embeddingArray = [Float]()

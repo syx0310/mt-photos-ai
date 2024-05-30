@@ -31,6 +31,11 @@ async def send_images(websocket, path):
 
                 md5_hash = hashlib.md5(image_data).hexdigest()
                 message_id = md5_hash.encode('utf-8')
+                
+                options = bytearray(32)
+                options[0] = 1  
+                options[1] = 0  
+                
                 message = message_id + image_data
 
                 for i in range(REPEAT_TIMES):
